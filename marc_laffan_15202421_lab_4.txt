@@ -1,0 +1,113 @@
+************************************************************************
+
+CREATE TABLE Lecturer (
+  lecturerNumber NUMBER(8) PRIMARY KEY NOT NULL,
+  name CHAR(50) NOT NULL,
+  roomNumber CHAR(4)
+);
+
+SQL> desc Lecturer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ LECTURERNUMBER                            NOT NULL NUMBER(8)
+ NAME                                      NOT NULL CHAR(50)
+ ROOMNUMBER                                         CHAR(4)
+
+************************************************************************
+
+CREATE TABLE Tutor (
+  tutorId NUMBER(8) PRIMARY KEY NOT NULL,
+  name CHAR(50) NOT NULL
+);
+
+SQL> desc tutor;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ TUTORID                                   NOT NULL NUMBER(8)
+ NAME                                      NOT NULL CHAR(50)
+
+************************************************************************
+
+CREATE TABLE Programme (
+  programmeId NUMBER(10) PRIMARY KEY NOT NULL,
+  title CHAR(50) NOT NULL,
+  tutorId NUMBER(8) REFERENCES Tutor(tutorId) NOT NULL
+);
+
+SQL> desc Programme;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PROGRAMMEID                               NOT NULL NUMBER(10)
+ TITLE                                     NOT NULL CHAR(50)
+ TUTORID                                   NOT NULL NUMBER(8)
+
+************************************************************************
+
+CREATE TABLE Module (
+  code VARCHAR(10) PRIMARY KEY NOT NULL,
+  title CHAR(50) NOT NULL,
+  lecturerNumber NUMBER(8) REFERENCES Lecturer(lecturerNumber)  NOT NULL,
+  programmeId NUMBER(10) REFERENCES Programme(programmeId) NOT NULL
+);
+
+SQL> desc Module;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CODE                                      NOT NULL VARCHAR2(10)
+ TITLE                                     NOT NULL CHAR(50)
+ LECTURERNUMBER                            NOT NULL NUMBER(8)
+ PROGRAMMEID                               NOT NULL NUMBER(10)
+
+************************************************************************
+
+CREATE TABLE Lecture (
+  lectureId NUMBER(30) PRIMARY KEY NOT NULL,
+  room CHAR(4),
+  lectureTime TIMESTAMP NOT NULL,
+  lectureDate DATE NOT NULL,
+  lecturerNumber NUMBER(8) REFERENCES Lecturer(lecturerNumber)  NOT NULL,
+  code VARCHAR(10) REFERENCES Module (code) NOT NULL
+);
+
+SQL> desc Lecture;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ LECTUREID                                 NOT NULL NUMBER(30)
+ ROOM                                               CHAR(4)
+ LECTURETIME                               NOT NULL TIMESTAMP(6)
+ LECTUREDATE                               NOT NULL DATE
+ LECTURERNUMBER                            NOT NULL NUMBER(8)
+ CODE                                      NOT NULL VARCHAR2(10)
+
+************************************************************************
+
+CREATE TABLE Student (
+  studentNumber NUMBER(8) PRIMARY KEY NOT NULL,
+  name CHAR(50) NOT NULL,
+  registered DATE NOT NULL,
+  programmeId NUMBER(10)  REFERENCES Programme(programmeId) NOT NULL
+);
+
+SQL> DESC STUDENT
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ STUDENTNUMBER                             NOT NULL NUMBER(8)
+ NAME                                      NOT NULL CHAR(50)
+ REGISTERED                                NOT NULL DATE
+ PROGRAMMEID                               NOT NULL NUMBER(10)
+
+
+************************************************************************
+
+CREATE TABLE TeachingSession (
+ code VARCHAR(10) REFERENCES Module(code) NOT NULL,
+ lectureId NUMBER(30) REFERENCES Lecture(lectureId) NOT NULL
+);
+
+SQL> desc TeachingSession;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CODE                                      NOT NULL VARCHAR2(10)
+ LECTUREID                                 NOT NULL NUMBER(30)
+
+************************************************************************
